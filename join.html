@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Join GoldMeet — Indian mobile OTP / waitlist</title>
+  <meta name="description" content="Sign in with phone OTP or join the Mumbai used-gold waitlist.">
+  <meta name="robots" content="index,follow,max-image-preview:large">
+  <meta name="googlebot" content="index,follow">
+  <meta name="theme-color" content="#1A2B3C">
+  <link rel="canonical" href="https://mjk93447-cpu.github.io/goldguideapp-site/join.html">
+  <link rel="alternate" hreflang="en-IN" href="https://mjk93447-cpu.github.io/goldguideapp-site/join.html">
+  <link rel="alternate" hreflang="hi-IN" href="https://mjk93447-cpu.github.io/goldguideapp-site/hi/">
+  <link rel="alternate" hreflang="x-default" href="https://mjk93447-cpu.github.io/goldguideapp-site/">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Join GoldMeet — Indian mobile OTP / waitlist">
+  <meta property="og:description" content="Sign in with phone OTP or join the Mumbai used-gold waitlist.">
+  <meta property="og:url" content="https://mjk93447-cpu.github.io/goldguideapp-site/join.html">
+  <meta property="og:locale" content="en_IN">
+  <meta name="twitter:card" content="summary">
+  <link rel="stylesheet" href="assets/style.css">
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"WebPage","name":"Join GoldMeet \u2014 Indian mobile OTP / waitlist","description":"Sign in with phone OTP or join the Mumbai used-gold waitlist.","url":"https://mjk93447-cpu.github.io/goldguideapp-site/join.html","isPartOf":{"@type":"WebSite","name":"GoldMeet","url":"https://mjk93447-cpu.github.io/goldguideapp-site/"}}
+  </script>
+  
+</head>
+<body>
+<header>
+  <a class="brand" href="index.html">GoldMeet</a>
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="rates.html">Today's rate</a>
+    <a href="how-it-works.html">How it works</a>
+    <a href="safety.html">Safety</a>
+    <a href="faq.html">FAQ</a>
+    <a href="join.html">Join</a>
+    <a class="lang" href="hi/index.html">हिन्दी</a>
+  </nav>
+</header>
+
+<div class="wrap">
+  <h1>Join GoldMeet with your Indian mobile</h1>
+  <p class="lead">Phone OTP when Supabase is linked. Until then, join the Mumbai waitlist — we email support@goldguideapp.com.</p>
+  <div class="card">
+    <h2>OTP (live backend)</h2>
+    <form id="otp-form">
+      <label>Mobile</label>
+      <input name="phone" required placeholder="9876543210" inputmode="numeric">
+      <label>OTP (after send)</label>
+      <input name="code" placeholder="6 digits" inputmode="numeric" maxlength="6">
+      <p><button class="btn" type="submit">Send / verify OTP</button></p>
+      <p id="otp-status" class="muted">If send fails, use the waitlist form.</p>
+    </form>
+  </div>
+  <div class="card" style="margin-top:1rem">
+    <h2>Waitlist (works now)</h2>
+    <form action="https://formsubmit.co/support@goldguideapp.com" method="POST">
+      <input type="hidden" name="_subject" value="GoldMeet waitlist">
+      <input type="hidden" name="_captcha" value="false">
+      <input type="hidden" name="_template" value="table">
+      <label>Name</label>
+      <input name="name" required>
+      <label>Indian mobile</label>
+      <input name="phone" required placeholder="9876543210">
+      <label>City</label>
+      <select name="city"><option>Mumbai</option><option>Delhi</option><option>Bangalore</option><option>Chennai</option><option>Kolkata</option><option>Hyderabad</option><option>Ahmedabad</option><option>Pune</option><option>Jaipur</option><option>Surat</option></select>
+      <label>I want to</label>
+      <select name="role"><option>Sell used gold</option><option>Buy used gold</option><option>Both</option></select>
+      <p><button class="btn" type="submit">Join waitlist</button></p>
+    </form>
+  </div>
+</div>
+
+<footer>
+  <div class="wrap">
+    <p><strong>GoldMeet</strong> by Gold Guide · support@goldguideapp.com</p>
+    <p>We match buyers and sellers of used gold in India. We do not hold gold, do not escrow money, and do not certify purity. Meet only in a shop or bank.</p>
+    <p>
+      <a href="privacy.html">Privacy</a> ·
+      <a href="deletion.html">Data deletion</a> ·
+      <a href="llms.txt">llms.txt</a> ·
+      <a href="https://github.com/mjk93447-cpu/goldguideapp-site">Source</a>
+    </p>
+  </div>
+</footer>
+<script src="assets/config.js"></script>
+<script src="assets/app.js"></script>
+</body>
+</html>

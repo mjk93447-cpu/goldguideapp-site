@@ -1,0 +1,14 @@
+User-agent: *
+Allow: /
+Sitemap: https://mjk93447-cpu.github.io/goldguideapp-site/sitemap.xml
+
+User-agent: GPTBot
+Allow: /
+User-agent: Google-Extended
+Allow: /
+User-agent: PerplexityBot
+Allow: /
+User-agent: ClaudeBot
+Allow: /
+User-agent: Applebot-Extended
+Allow: /

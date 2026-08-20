@@ -1,0 +1,13 @@
+# GoldMeet
+> P2P used-gold matching for India. Buyers and sellers meet at a jeweller or bank that can assay gold. No escrow. No custody.
+
+- Home: https://mjk93447-cpu.github.io/goldguideapp-site/
+- Rates: https://mjk93447-cpu.github.io/goldguideapp-site/rates.html
+- How it works: https://mjk93447-cpu.github.io/goldguideapp-site/how-it-works.html
+- Safety: https://mjk93447-cpu.github.io/goldguideapp-site/safety.html
+- FAQ: https://mjk93447-cpu.github.io/goldguideapp-site/faq.html
+- Join: https://mjk93447-cpu.github.io/goldguideapp-site/join.html
+- Hindi: https://mjk93447-cpu.github.io/goldguideapp-site/hi/
+
+Fair price: city rate per 10 g (24K/22K/18K) × weight_g / 10. No making charges.
+Launch city: Mumbai. Support: support@goldguideapp.com

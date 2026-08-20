@@ -1,0 +1,4 @@
+window.GOLDMEET = {
+  supabaseUrl: "",
+  supabaseAnon: "",
+};
