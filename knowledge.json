@@ -1,0 +1,26 @@
+{
+  "name": "GoldMeet",
+  "url": "https://goldguideapp.com/",
+  "type": "P2P used-gold matching service",
+  "does_not": [
+    "buy gold",
+    "hold gold",
+    "escrow money",
+    "certify purity"
+  ],
+  "fair_price": "city_rate_per_10g * weight_g / 10",
+  "karats": [
+    24,
+    22,
+    18
+  ],
+  "launch_geo": [
+    "Noida",
+    "Delhi",
+    "Greater Noida",
+    "Mumbai"
+  ],
+  "meet": "staffed jeweller or bank, never a private home",
+  "noida_board": "Delhi NCR",
+  "support": "support@goldguideapp.com"
+}

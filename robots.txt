@@ -1,6 +1,6 @@
 User-agent: *
 Allow: /
-Sitemap: https://mjk93447-cpu.github.io/goldguideapp-site/sitemap.xml
+Sitemap: https://goldguideapp.com/sitemap.xml
 
 User-agent: GPTBot
 Allow: /

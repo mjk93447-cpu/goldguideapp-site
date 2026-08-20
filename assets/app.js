@@ -1,5 +1,5 @@
 const SPREADS = {
-  Mumbai: 0, Delhi: 12, Bangalore: 8, Chennai: -6, Kolkata: 5,
+  Mumbai: 0, Delhi: 12, Noida: 12, Bangalore: 8, Chennai: -6, Kolkata: 5,
   Hyderabad: 4, Ahmedabad: 10, Pune: 3, Jaipur: 7, Surat: 9,
 };
 
@@ -129,6 +129,19 @@ function bootAuth() {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
+  const city = new URLSearchParams(location.search).get("city");
+  const q = new URLSearchParams(location.search);
+  ["utm_source", "utm_campaign", "utm_medium"].forEach((k) => {
+    const v = q.get(k);
+    const el = document.querySelector(`[name="${k}"]`);
+    if (v && el) el.value = v;
+  });
+  if (city) {
+    document.querySelectorAll("select[name=city]").forEach((el) => {
+      const hit = [...el.options].find((o) => o.value === city || o.text === city);
+      if (hit) el.value = hit.value;
+    });
+  }
   bootRates();
   bootAuth();
 });
