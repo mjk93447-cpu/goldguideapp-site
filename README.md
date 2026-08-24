@@ -1,9 +1,11 @@
-# GoldMeet public website
+# GoldMeet public website (GitHub Pages)
 
-Used-gold P2P matching for India. Meet at a jeweller or bank. Fair 24K / 22K / 18K metal price.
+Live site: **https://goldguideapp.com**
 
-**https://goldguideapp.com**
+This public repository exists only so GitHub Pages can serve the apex domain. **Do not develop here.**
 
-Support: support@goldguideapp.com
+Canonical source: [mjk93447-cpu/Goldmeet](https://github.com/mjk93447-cpu/Goldmeet) → `site/`
 
-Regenerate: `python generate.py`
+Publish from that repo: `pwsh scripts/publish-site.ps1`
+
+Daily IST gold rates: this repo’s `daily-gold-rates` workflow writes `rates.json` (`GOLDAPI_KEY` secret).

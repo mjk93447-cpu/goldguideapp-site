@@ -77,7 +77,7 @@ def page(title: str, desc: str, path: str, body: str, lang: str = "en", extra_js
       <a href="{'../' if '/' in path else ''}privacy.html">Privacy</a> ·
       <a href="{'../' if '/' in path else ''}deletion.html">Data deletion</a> ·
       <a href="{'../' if '/' in path else ''}llms.txt">llms.txt</a> ·
-      <a href="https://github.com/mjk93447-cpu/goldguideapp-site">Source</a>
+      <a href="https://github.com/mjk93447-cpu/Goldmeet/tree/main/site">Source</a>
     </p>
   </div>
 </footer>
