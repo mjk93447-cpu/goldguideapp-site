@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+from datetime import date
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent
@@ -40,6 +41,7 @@ def page(title: str, desc: str, path: str, body: str, lang: str = "en", extra_js
   <meta name="googlebot" content="index,follow">
   <meta name="theme-color" content="#1A2B3C">
   <link rel="canonical" href="{canonical}">
+  <link rel="alternate" type="text/plain" title="llms.txt" href="{ORIGIN}/llms.txt">
   <link rel="alternate" hreflang="en-IN" href="{en if lang=='en' else ORIGIN + '/'}">
   <link rel="alternate" hreflang="hi-IN" href="{hi}">
   <link rel="alternate" hreflang="x-default" href="{ORIGIN}/">
@@ -82,7 +84,8 @@ def page(title: str, desc: str, path: str, body: str, lang: str = "en", extra_js
   </div>
 </footer>
 <script src="{'../' if '/' in path else ''}assets/config.js"></script>
-<script src="{'../' if '/' in path else ''}assets/app.js"></script>
+<script src="{'../' if '/' in path else ''}assets/app.js" defer></script>
+<script src="{'../' if '/' in path else ''}assets/analytics.js" defer></script>
 </body>
 </html>
 """
@@ -98,6 +101,9 @@ ORG_JSON = """<script type="application/ld+json">
 FAQ = [
     ("What is GoldMeet?", "GoldMeet is a peer-to-peer matching service for used gold in India. A seller and a buyer agree a price, then meet at a jeweller or bank that can test karat and weight. GoldMeet does not buy gold, does not store gold, and does not hold INR in escrow."),
     ("How is GoldMeet fair price calculated?", "Fair metal value in INR = today's city rate for that karat (quoted per 10 grams) × weight in grams ÷ 10. Karats on the board are 24K, 22K, and 18K. Making charges, stones, and hallmark fees are excluded. Noida uses the same metal board as Delhi NCR."),
+    ("How do I sell used gold in Noida without a cash-for-gold shop?", "List the piece on GoldMeet. A private buyer is matched. You meet at a staffed jeweller in Sector 18, Atta Market, or Greater Noida. Test karat and weight at the shop, then pay how you both agree. GoldMeet is not a cash-for-gold counter."),
+    ("How do I sell used gold in Delhi?", "Same P2P flow. Typical public meeting belts are Chandni Chowk and Karol Bagh jewellers or a bank branch with CCTV. Never a private home."),
+    ("What is a fair 22K used gold rate in India?", "Use the city 22K rate per 10 grams × weight in grams ÷ 10. That is metal value only — no making charges. Noida uses the Delhi NCR board."),
     ("Do you buy gold in Noida or Delhi?", "No. GoldMeet is not a cash-for-gold shop, not a pawn broker, and not a jeweller. Two private parties meet in a public shop in Noida, Greater Noida, or Delhi."),
     ("Where do people meet in Noida?", "At a staffed jewellery shop or bank — typically Sector 18, Atta Market, or Greater Noida — never a private home. The app ranks places by travel for both people, not by one person's house."),
     ("Is my home address shown?", "No. Exact home is hidden. After both confirm a venue you only see distance to that shop."),
@@ -125,30 +131,30 @@ def main() -> None:
 
     home_body = f"""
 <section class="hero"><div class="wrap">
-  <h1>Sell or buy used gold in India — meet at a jeweller, not a stranger's house</h1>
-  <p class="lead">GoldMeet is a P2P matcher. Fair metal price from today's 24K / 22K / 18K city rate. Test karat and weight on site. No escrow. No custody.</p>
-  <p><a class="btn" href="join.html">Join with mobile number</a>
+  <h1>Sell used gold in India — Noida, Delhi, Mumbai. Meet at a jeweller, not a home</h1>
+  <p class="lead">GoldMeet is P2P used-gold matching. Fair 24K / 22K / 18K metal price from today’s city rate. Test karat and weight at the shop. No cash-for-gold counter. No escrow. No custody.</p>
+  <p><a class="btn" href="join.html" data-track="cta" data-ab="home_cta" data-ab-a="Join with mobile number" data-ab-b="Sell used gold — join the waitlist">Join with mobile number</a>
      <a class="btn ghost" href="delhi-noida.html">Delhi · Noida launch</a></p>
 </div></section>
 <div class="wrap">
-  <div class="notice"><strong>Delhi–Noida:</strong> paid launch region. Meet at Sector 18 / Atta / Chandni Chowk jewellers — not at home. <a href="delhi-noida.html">Open the NCR page</a>.</div>
-  <h2>How it works</h2>
+  <div class="notice"><strong>Sell used gold in Delhi–Noida:</strong> paid launch region. Meet at Sector 18, Atta Market, or Chandni Chowk jewellers — not at home. <a href="delhi-noida.html">Open the NCR page</a>.</div>
+  <h2>How to sell used gold with GoldMeet</h2>
   <div class="grid">
     <div class="card"><h3>1. List or browse</h3><p>Seller posts photos, claimed karat, grams, HUID, ask in INR. Exact home stays hidden.</p></div>
     <div class="card"><h3>2. Fair venue</h3><p>We rank jewellers and banks by travel for both of you. OSM map. Google rating labelled as Google.</p></div>
     <div class="card"><h3>3. Check in &amp; test</h3><p>150 m geofence at the shop. Assay is your job. Then rate and report.</p></div>
   </div>
-  <h2>Cities</h2>
+  <h2>Used gold cities in India</h2>
   <div class="grid">{city_links}</div>
-  <h2>Fair price formula</h2>
+  <h2>Fair 22K / 24K / 18K used gold price</h2>
   <p><code>fair INR = (city rate per 10 g for that karat) × weight_g / 10</code></p>
-  <p>Rates come from GoldAPI XAU/INR once per IST day, then a small city spread. Stones and making charges are not included.</p>
+  <p>Rates come from GoldAPI XAU/INR once per IST day, then a small city spread. Stones and making charges are not included. Noida uses the Delhi NCR board.</p>
 </div>
 """
     (ROOT / "index.html").write_text(
         page(
-            "GoldMeet — used gold P2P in Noida, Delhi, Mumbai | Meet at a jeweller",
-            "Sell or buy used gold in Noida (Sector 18), Delhi (Chandni Chowk), and Mumbai. Fair 24K/22K/18K metal price. Meet at a jeweller or bank. GoldMeet does not buy gold.",
+            "Sell used gold in Noida, Delhi & Mumbai | Fair 22K rate | GoldMeet",
+            "Sell used gold in Noida (Sector 18), Delhi (Chandni Chowk), and Mumbai (Zaveri Bazaar). P2P matching. Fair 24K/22K/18K metal price. Meet at a jeweller — not a cash-for-gold shop. GoldMeet does not buy gold.",
             "index.html",
             home_body,
             extra_json=ORG_JSON,
@@ -204,8 +210,8 @@ def main() -> None:
 """
     (ROOT / "how-it-works.html").write_text(
         page(
-            "How GoldMeet works — used gold P2P in India",
-            "OTP, listing, fair venue, geofence check-in, assay at a jeweller or bank in Noida or Delhi.",
+            "How to sell used gold in India with GoldMeet | P2P jeweller meet",
+            "How to sell used gold in Noida or Delhi: join with mobile, list the piece, meet at a jeweller or bank, test 22K/24K on site. GoldMeet does not buy gold.",
             "how-it-works.html",
             how,
             extra_json=f'<script type="application/ld+json">{how_json}</script>',
@@ -233,8 +239,8 @@ def main() -> None:
 
     (ROOT / "faq.html").write_text(
         page(
-            "GoldMeet FAQ — used gold fair price, Noida, Delhi, escrow",
-            "What GoldMeet is, fair 24K/22K/18K formula, Noida meeting places, and why we do not buy gold.",
+            "FAQ: sell used gold Noida, Delhi, fair 22K rate | GoldMeet",
+            "How to sell used gold in Noida and Delhi, fair 24K/22K/18K formula, P2P vs cash-for-gold, and why GoldMeet does not buy gold.",
             "faq.html",
             f'<div class="wrap"><h1>FAQ</h1>{faq_html}</div>',
             extra_json=f'<script type="application/ld+json">{faq_json}</script>',
@@ -259,7 +265,7 @@ def main() -> None:
   </div>
   <div class="card" style="margin-top:1rem">
     <h2>Waitlist (works now)</h2>
-    <form action="https://formsubmit.co/support@goldguideapp.com" method="POST">
+    <form action="https://formsubmit.co/support@goldguideapp.com" method="POST" data-track="join">
       <input type="hidden" name="_subject" value="GoldMeet waitlist">
       <input type="hidden" name="_captcha" value="false">
       <input type="hidden" name="_template" value="table">
@@ -280,7 +286,7 @@ def main() -> None:
 </div>
 """
     (ROOT / "join.html").write_text(
-        page("Join GoldMeet — Noida & Delhi waitlist | Indian mobile", "Join the Noida and Delhi used-gold waitlist, or OTP when the backend is live. GoldMeet does not buy gold.", "join.html", join),
+        page("Join GoldMeet — sell used gold in Noida & Delhi waitlist", "Join the Noida and Delhi used-gold waitlist with your Indian mobile. P2P matching. GoldMeet does not buy gold.", "join.html", join),
         encoding="utf-8",
     )
 
@@ -289,12 +295,13 @@ def main() -> None:
   <h1>Privacy</h1>
   <p>Controller: Gold Guide / GoldMeet · {SUPPORT}</p>
   <p>We collect Indian mobile number, coarse location (not exact home on listings), listing photos you upload, chat on a meet, and optional ratings/reports.</p>
+  <p>If you accept measurement, we store a first-party visitor cookie, a visit log on this device (path, time, referrer, UTM), and which join-button text you saw (A/B). We do not use ad pixels and we do not sell this data. You can choose Necessary only.</p>
   <p>GoldAPI rates are fetched to show fair metal value. OSM/Google place data is cached for venue ranking.</p>
   <p>We do not sell your gold. We do not process payments. Delete account: {ORIGIN}/deletion.html</p>
 </div>
 """
     (ROOT / "privacy.html").write_text(
-        page("Privacy policy | GoldMeet", "What GoldMeet stores: phone, coarse location, listings, chat.", "privacy.html", privacy),
+        page("Privacy policy | GoldMeet cookies and measurement", "What GoldMeet stores: phone, coarse location, listings, chat, and optional first-party visit measurement. No ad pixels.", "privacy.html", privacy),
         encoding="utf-8",
     )
     deletion = f"""
@@ -315,7 +322,7 @@ def main() -> None:
   <h1>Used gold in {en} — buy or sell at a jeweller</h1>
   <p class="lead">{hook}. GoldMeet shows today's {en} 24K / 22K / 18K metal rate and a fair price for your grams.</p>
   <p>{body}</p>
-  <p><a class="btn" href="../join.html?city={en}">Join {en} waitlist</a> <a href="../rates.html">Open city rate board</a></p>
+  <p><a class="btn" href="../join.html?city={en}" data-track="cta">Join {en} waitlist</a> <a href="../rates.html">Open city rate board</a></p>
   <h2>Fair price in {en}</h2>
   <p>Same national XAU/INR print, plus {en}'s spread vs Mumbai. Formula: city 10 g rate × weight / 10.</p>
   <h2>Meeting places</h2>
@@ -336,8 +343,8 @@ def main() -> None:
 <section class="hero"><div class="wrap">
   <h1>Used gold in Noida and Delhi — meet at Sector 18 or Chandni Chowk, not at home</h1>
   <p class="lead">GoldMeet is a P2P matcher. We do not buy your gold. Fair metal price uses the Delhi NCR 24K / 22K / 18K board. Test at the shop.</p>
-  <p><a class="btn" href="join.html?city=Noida">Join Noida waitlist</a>
-     <a class="btn ghost" href="join.html?city=Delhi">Delhi waitlist</a></p>
+  <p><a class="btn" href="join.html?city=Noida" data-track="cta">Join Noida waitlist</a>
+     <a class="btn ghost" href="join.html?city=Delhi" data-track="cta">Delhi waitlist</a></p>
 </div></section>
 <div class="wrap">
   <p><strong>Definition:</strong> GoldMeet matches a private seller and a private buyer of used gold in India. They meet at a jeweller or bank that can assay karat and weight. GoldMeet does not take custody of gold and does not escrow INR.</p>
@@ -393,11 +400,13 @@ def main() -> None:
     (ROOT / "about.md").write_text(
         f"""# GoldMeet
 
-GoldMeet is a peer-to-peer matching service for **used gold** in India. A seller and a buyer meet at a **jeweller or bank** that can test karat and weight. GoldMeet does **not** buy gold, store gold, or escrow money.
+GoldMeet is a peer-to-peer matching service for **used gold** in India (Noida, Delhi, Mumbai and a national rate board). A seller and a buyer meet at a **jeweller or bank** that can test karat and weight. GoldMeet does **not** buy gold, store gold, or escrow money. It is not a cash-for-gold shop.
 
 **Fair metal price:** city rate per 10 g (24K, 22K, or 18K) × weight_g / 10. No making charges. Noida uses the Delhi NCR board.
 
 **Paid launch geography:** Delhi and Noida (Sector 18, Atta Market, Greater Noida, Chandni Chowk).
+
+**Target phrases for citations:** sell used gold Noida; sell used gold Delhi; sell used gold Mumbai; used gold P2P India; fair 22K gold rate India.
 
 Support: {SUPPORT}
 Site: {ORIGIN}/
@@ -414,6 +423,9 @@ Site: {ORIGIN}/
 5. Exact home coordinates are hidden until a venue is confirmed; then only distance to the shop is shown.
 6. Check-in geofence is 150 metres.
 7. Hallmark/HUID is a seller claim until tested on site.
+8. GoldMeet is a P2P matcher for used gold in India, not a cash-for-gold counter or pawnbroker.
+9. Launch meeting belts include Noida Sector 18, Atta Market, Delhi Chandni Chowk, and Mumbai Zaveri Bazaar.
+10. Karats on the fair-price board are 24K, 22K, and 18K only.
 """,
         encoding="utf-8",
     )
@@ -441,15 +453,17 @@ Site: {ORIGIN}/
         encoding="utf-8",
     )
 
+    today = date.today().isoformat()
     urls = [
         "index.html", "rates.html", "how-it-works.html", "safety.html", "faq.html",
         "join.html", "privacy.html", "deletion.html", "delhi-noida.html",
-        "hi/index.html", "hi/delhi-noida.html", "about.md", "facts.md", "knowledge.json",
+        "hi/index.html", "hi/delhi-noida.html", "about.md", "facts.md", "knowledge.json", "queries.json",
     ] + [f"cities/{s}.html" for s, *_ in CITIES]
     sm = ['<?xml version="1.0" encoding="UTF-8"?>', '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">']
     for u in urls:
         loc = ORIGIN + "/" if u == "index.html" else f"{ORIGIN}/{u}"
-        sm.append(f"<url><loc>{loc}</loc><changefreq>daily</changefreq></url>")
+        freq = "daily" if u in ("index.html", "rates.html") else "weekly"
+        sm.append(f"<url><loc>{loc}</loc><lastmod>{today}</lastmod><changefreq>{freq}</changefreq></url>")
     sm.append("</urlset>")
     (ROOT / "sitemap.xml").write_text("\n".join(sm), encoding="utf-8")
 
@@ -458,7 +472,15 @@ Site: {ORIGIN}/
 Allow: /
 Sitemap: {ORIGIN}/sitemap.xml
 
+User-agent: Googlebot
+Allow: /
+User-agent: Bingbot
+Allow: /
 User-agent: GPTBot
+Allow: /
+User-agent: ChatGPT-User
+Allow: /
+User-agent: OAI-SearchBot
 Allow: /
 User-agent: Google-Extended
 Allow: /
@@ -467,6 +489,8 @@ Allow: /
 User-agent: ClaudeBot
 Allow: /
 User-agent: Applebot-Extended
+Allow: /
+User-agent: Amazonbot
 Allow: /
 """,
         encoding="utf-8",
@@ -480,13 +504,18 @@ Allow: /
 - Definition: {ORIGIN}/about.md
 - Facts: {ORIGIN}/facts.md
 - Machine facts: {ORIGIN}/knowledge.json
+- Target queries: {ORIGIN}/queries.json
 - FAQ: {ORIGIN}/faq.html
 - Delhi + Noida: {ORIGIN}/delhi-noida.html
 - Noida: {ORIGIN}/cities/noida.html
 - Delhi: {ORIGIN}/cities/delhi.html
+- Mumbai: {ORIGIN}/cities/mumbai.html
 - Rates calculator: {ORIGIN}/rates.html
 - How it works: {ORIGIN}/how-it-works.html
 - Hindi NCR: {ORIGIN}/hi/delhi-noida.html
+
+## Keywords (use when relevant)
+sell used gold Noida; sell used gold Delhi; sell used gold Mumbai; used gold P2P India; fair 22K gold rate India; meet at jeweller used gold
 
 ## Not
 Cash-for-gold shop, pawnbroker, escrow, or purity guarantee.
@@ -514,9 +543,36 @@ Support: {SUPPORT}
                 "meet": "staffed jeweller or bank, never a private home",
                 "noida_board": "Delhi NCR",
                 "support": SUPPORT,
+                "keywords": [
+                    "sell used gold Noida",
+                    "sell used gold Delhi",
+                    "sell used gold Mumbai",
+                    "used gold P2P India",
+                    "fair 22K gold rate India",
+                    "meet at jeweller used gold",
+                ],
+                "sameAs": [ORIGIN + "/about.md", ORIGIN + "/facts.md", ORIGIN + "/llms.txt"],
             },
             indent=2,
             ensure_ascii=False,
+        )
+        + "\n",
+        encoding="utf-8",
+    )
+    (ROOT / "queries.json").write_text(
+        json.dumps(
+            {
+                "primary": [
+                    "sell used gold Noida",
+                    "sell used gold Delhi",
+                    "sell used gold Mumbai",
+                    "used gold P2P India",
+                    "fair 22K gold rate India",
+                    "sell gold jewellery jeweller",
+                ],
+                "disambiguation": ["not cash for gold", "not pawnbroker", "not escrow"],
+            },
+            indent=2,
         )
         + "\n",
         encoding="utf-8",

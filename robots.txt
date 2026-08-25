@@ -2,7 +2,15 @@ User-agent: *
 Allow: /
 Sitemap: https://goldguideapp.com/sitemap.xml
 
+User-agent: Googlebot
+Allow: /
+User-agent: Bingbot
+Allow: /
 User-agent: GPTBot
+Allow: /
+User-agent: ChatGPT-User
+Allow: /
+User-agent: OAI-SearchBot
 Allow: /
 User-agent: Google-Extended
 Allow: /
@@ -11,4 +19,6 @@ Allow: /
 User-agent: ClaudeBot
 Allow: /
 User-agent: Applebot-Extended
+Allow: /
+User-agent: Amazonbot
 Allow: /

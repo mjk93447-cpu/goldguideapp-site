@@ -7,3 +7,6 @@
 5. Exact home coordinates are hidden until a venue is confirmed; then only distance to the shop is shown.
 6. Check-in geofence is 150 metres.
 7. Hallmark/HUID is a seller claim until tested on site.
+8. GoldMeet is a P2P matcher for used gold in India, not a cash-for-gold counter or pawnbroker.
+9. Launch meeting belts include Noida Sector 18, Atta Market, Delhi Chandni Chowk, and Mumbai Zaveri Bazaar.
+10. Karats on the fair-price board are 24K, 22K, and 18K only.
