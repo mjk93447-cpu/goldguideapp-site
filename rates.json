@@ -1,5 +1,5 @@
 {
-  "timestamp": 1787995006,
+  "timestamp": 1788078528,
   "metal": "XAU",
   "currency": "INR",
   "exchange": "IDC",
@@ -22,6 +22,6 @@
   "price_gram_16k": 9109.599,
   "price_gram_14k": 7970.8991,
   "price_gram_10k": 5693.4994,
-  "as_of_ist": "2026-08-29",
+  "as_of_ist": "2026-08-30",
   "source": "goldapi_inr"
 }
