@@ -25,6 +25,7 @@ except Exception:  # pragma: no cover - Windows without tzdata
 OUT = Path(sys.argv[1] if len(sys.argv) > 1 else "rates.json")
 KEY = os.environ.get("GOLDAPI_KEY", "").strip()
 IBJA_URL = "https://ibjarates.com/"
+GOLDPRICE_URL = "https://api.goldprice.dev/v1/prices?symbol=XAU-INR-SPOT"
 CONTENTS_URL = "https://api.github.com/repos/mjk93447-cpu/goldguideapp-site/contents/rates.json?ref=main"
 RAW_URL = os.environ.get(
     "GOLD_RATE_SYNC_URL",
@@ -33,6 +34,7 @@ RAW_URL = os.environ.get(
 
 # Effective BCD + AIDC on bullion from 13 May 2026. IBJA prints rates without GST.
 INDIA_IMPORT_DUTY = 0.15
+TROY_OUNCE_GRAMS = 31.1034768
 
 IBJA_ROW = re.compile(
     r'data-label="(?P<session>AM|PM)"><strong>(?P<date>\d{2}/\d{2}/\d{4})</strong></td>\s*'
@@ -166,6 +168,33 @@ def from_goldapi_landed(key: str) -> dict:
     return india_board_from_spot(spot, _now_ist().isoformat())
 
 
+def from_goldprice_landed() -> dict:
+    """Free, keyless emergency fallback when IBJA and GoldAPI are unavailable."""
+    payload = fetch_json(GOLDPRICE_URL)
+    row = payload["symbols"][0]
+    price_per_oz = float(row["price"])
+    if price_per_oz <= 0 or row.get("is_stale"):
+        raise ValueError("GoldPrice.dev returned no fresh XAU/INR spot quote")
+    ist = _now_ist()
+    per_gram_24k = price_per_oz / TROY_OUNCE_GRAMS
+    spot = {
+        "timestamp": int(ist.timestamp()),
+        "metal": "XAU",
+        "currency": "INR",
+        "price_gram_24k": per_gram_24k,
+        "price_gram_22k": per_gram_24k * (22 / 24),
+        "price_gram_18k": per_gram_24k * (18 / 24),
+    }
+    data = india_board_from_spot(spot, ist.isoformat())
+    data["source"] = "goldprice_dev_xau_inr_plus_import_duty"
+    data["validation"] = {
+        "source": "goldprice_dev_xau_inr_spot",
+        "status": "fallback",
+        "computed_at": row.get("computed_at"),
+    }
+    return data
+
+
 def from_public_feed() -> dict:
     try:
         return unwrap_feed(
@@ -193,6 +222,11 @@ def main() -> None:
                 data = from_goldapi_landed(KEY)
             except Exception as goldapi_exc:
                 errors.append(f"goldapi: {goldapi_exc}")
+        if data is None:
+            try:
+                data = from_goldprice_landed()
+            except Exception as goldprice_exc:
+                errors.append(f"goldprice.dev: {goldprice_exc}")
         if data is None:
             data = from_public_feed()
             if str(data.get("source", "")).startswith("goldapi_inr") and not str(data.get("source")).endswith(
