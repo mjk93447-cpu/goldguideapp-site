@@ -1,8 +1,11 @@
 name: daily-gold-rates
 
+# Designed cadence: 08:00 IST (02:30 UTC). Second run at 20:00 IST (14:30 UTC)
+# so a delayed GitHub cron cannot miss the PWA 48-hour freshness window.
 on:
   schedule:
     - cron: "30 2 * * *"
+    - cron: "30 14 * * *"
   workflow_dispatch:
 
 permissions:
@@ -33,7 +36,7 @@ jobs:
           data["as_of_ist"] = ist.strftime("%Y-%m-%d")
           data["fetched_at_ist"] = ist.isoformat()
           data["source"] = "goldapi_inr"
-          open("rates.json", "w", encoding="utf-8").write(json.dumps(data, indent=2))
+          open("rates.json", "w", encoding="utf-8").write(json.dumps(data, indent=2) + "\n")
           print("wrote rates.json", data.get("price_gram_22k"))
           PY
       - name: Commit rates.json
