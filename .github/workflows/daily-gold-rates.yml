@@ -16,29 +16,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Fetch GoldAPI XAU/INR
+      - name: Fetch IBJA India gold board (GoldAPI spot is fallback only)
         env:
           GOLDAPI_KEY: ${{ secrets.GOLDAPI_KEY }}
-        run: |
-          python3 - <<'PY'
-          import json, os, urllib.request
-          from datetime import datetime, timezone
-          from zoneinfo import ZoneInfo
-          key = os.environ["GOLDAPI_KEY"]
-          req = urllib.request.Request(
-              "https://www.goldapi.io/api/XAU/INR",
-              headers={"x-access-token": key, "Content-Type": "application/json"},
-          )
-          with urllib.request.urlopen(req, timeout=30) as r:
-              data = json.load(r)
-          fetched_at = datetime.now(timezone.utc)
-          ist = fetched_at.astimezone(ZoneInfo("Asia/Kolkata"))
-          data["as_of_ist"] = ist.strftime("%Y-%m-%d")
-          data["fetched_at_ist"] = ist.isoformat()
-          data["source"] = "goldapi_inr"
-          open("rates.json", "w", encoding="utf-8").write(json.dumps(data, indent=2) + "\n")
-          print("wrote rates.json", data.get("price_gram_22k"))
-          PY
+        run: python3 .github/scripts/fetch-gold-rates.py rates.json
       - name: Commit rates.json
         run: |
           git config user.name "github-actions"
