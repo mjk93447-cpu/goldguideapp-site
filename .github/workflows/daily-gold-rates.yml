@@ -19,7 +19,8 @@ jobs:
         run: |
           python3 - <<'PY'
           import json, os, urllib.request
-          from datetime import datetime, timezone, timedelta
+          from datetime import datetime, timezone
+          from zoneinfo import ZoneInfo
           key = os.environ["GOLDAPI_KEY"]
           req = urllib.request.Request(
               "https://www.goldapi.io/api/XAU/INR",
@@ -28,7 +29,7 @@ jobs:
           with urllib.request.urlopen(req, timeout=30) as r:
               data = json.load(r)
           fetched_at = datetime.now(timezone.utc)
-          ist = fetched_at + timedelta(hours=5, minutes=30)
+          ist = fetched_at.astimezone(ZoneInfo("Asia/Kolkata"))
           data["as_of_ist"] = ist.strftime("%Y-%m-%d")
           data["fetched_at_ist"] = ist.isoformat()
           data["source"] = "goldapi_inr"
