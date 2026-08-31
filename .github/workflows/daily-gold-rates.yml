@@ -27,8 +27,10 @@ jobs:
           )
           with urllib.request.urlopen(req, timeout=30) as r:
               data = json.load(r)
-          ist = datetime.now(timezone.utc) + timedelta(hours=5, minutes=30)
+          fetched_at = datetime.now(timezone.utc)
+          ist = fetched_at + timedelta(hours=5, minutes=30)
           data["as_of_ist"] = ist.strftime("%Y-%m-%d")
+          data["fetched_at_ist"] = ist.isoformat()
           data["source"] = "goldapi_inr"
           open("rates.json", "w", encoding="utf-8").write(json.dumps(data, indent=2))
           print("wrote rates.json", data.get("price_gram_22k"))
