@@ -1,5 +1,6 @@
 const SPREADS = {
-  Mumbai: 0, Delhi: 12, Noida: 12, Bangalore: 8, Chennai: -6, Kolkata: 5,
+  Noida: 12, Delhi: 12, Gurgaon: 12, "Greater Noida": 12,
+  Mumbai: 0, Bangalore: 8, Chennai: -6, Kolkata: 5,
   Hyderabad: 4, Ahmedabad: 10, Pune: 3, Jaipur: 7, Surat: 9,
 };
 

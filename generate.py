@@ -14,9 +14,11 @@ BRAND = "GoldMeet"
 SUPPORT = "support@goldguideapp.com"
 
 CITIES = [
-    ("mumbai", "Mumbai", "मुंबई", "Zaveri Bazaar and Opera House", "Meet at a jeweller or bank in Zaveri Bazaar, Opera House, or Fort. Assay on site. Never at a private home."),
-    ("delhi", "Delhi", "दिल्ली", "Chandni Chowk and Karol Bagh", "Meet in Chandni Chowk, Karol Bagh, or a bank branch with CCTV. Test karat and weight before you pay."),
     ("noida", "Noida", "नोएडा", "Sector 18, Atta Market, Greater Noida", "Meet at a staffed jeweller or bank in Sector 18, Atta Market, or Greater Noida. Noida uses the Delhi NCR metal board. Never meet at a flat or parking lot."),
+    ("delhi", "Delhi", "दिल्ली", "Chandni Chowk and Karol Bagh", "Meet in Chandni Chowk, Karol Bagh, or a bank branch with CCTV. Test karat and weight before you pay."),
+    ("gurgaon", "Gurgaon", "गुड़गांव", "Sadar Bazaar and Sector 29", "Meet at a jeweller or bank in Sadar Bazaar, Sector 29, or GoldSouks. Gurgaon uses the Delhi NCR metal board. Never meet at a flat or parking lot."),
+    ("greater-noida", "Greater Noida", "ग्रेटर नोएडा", "Jagat Farm and Pari Chowk", "Meet at a staffed jeweller or bank in Jagat Farm, Alpha Commercial, or Pari Chowk. Same Delhi NCR board as Noida. Never meet at a flat or parking lot."),
+    ("mumbai", "Mumbai", "मुंबई", "Zaveri Bazaar and Opera House", "Meet at a jeweller or bank in Zaveri Bazaar, Opera House, or Fort. Assay on site. Never at a private home."),
     ("bangalore", "Bangalore", "बेंगलुरु", "Commercial Street and Jayanagar", "Commercial Street and Jayanagar jewellers plus bank branches. Fair metal price uses Bengaluru's city spread."),
     ("chennai", "Chennai", "चेन्नई", "T. Nagar and Sowcarpet", "T. Nagar and Sowcarpet gold streets. Chennai spread is slightly below Mumbai on our board."),
     ("kolkata", "Kolkata", "कोलकाता", "Bowbazar", "Bowbazar jewellers and public-sector banks. Bring HUID or hallmark card if you have it."),
@@ -330,9 +332,11 @@ def main() -> None:
     SELL_FOCUS = [
         ("noida", "Noida", "Sector 18, Atta Market, Greater Noida"),
         ("delhi", "Delhi", "Chandni Chowk and Karol Bagh"),
+        ("gurgaon", "Gurgaon", "Sadar Bazaar and Sector 29"),
+        ("greater-noida", "Greater Noida", "Jagat Farm and Pari Chowk"),
         ("mumbai", "Mumbai", "Zaveri Bazaar and Opera House"),
-        ("chennai", "Chennai", "T. Nagar and Sowcarpet"),
         ("bangalore", "Bangalore", "Commercial Street and Jayanagar"),
+        ("chennai", "Chennai", "T. Nagar and Sowcarpet"),
         ("hyderabad", "Hyderabad", "Pathergatti and Laad Bazaar"),
     ]
     (ROOT / "sell").mkdir(exist_ok=True)
@@ -409,13 +413,15 @@ def main() -> None:
   <p>Typical public meeting belts: Sector 18 jewellery market, Atta Market, and Greater Noida shops with staff and CCTV. The fair price for Noida uses the same metal print as Delhi (NCR spread vs Mumbai), then <code>rate_per_10g × grams / 10</code>. No making charges.</p>
   <h2>Delhi</h2>
   <p>Chandni Chowk, Karol Bagh, and bank branches. Same NCR board. Ranked by travel for both people so one party is not sent across the Yamuna alone.</p>
+  <h2>Gurgaon and Greater Noida</h2>
+  <p>Gurgaon: Sadar Bazaar, Sector 29, and GoldSouks. Greater Noida: Jagat Farm, Alpha Commercial, and Pari Chowk. Same Delhi NCR metal board as Noida — <code>rate_per_10g × grams / 10</code>, no making charges.</p>
   <h2>What we are not</h2>
   <ul>
     <li>Not a cash-for-gold counter</li>
     <li>Not a pawnbroker</li>
     <li>Not a guarantee of purity — the shop test is the source of truth</li>
   </ul>
-  <p><a href="cities/noida.html">Noida city page</a> · <a href="cities/delhi.html">Delhi city page</a> · <a href="faq.html">FAQ for AI and humans</a></p>
+  <p><a href="cities/noida.html">Noida city page</a> · <a href="cities/delhi.html">Delhi city page</a> · <a href="cities/gurgaon.html">Gurgaon city page</a> · <a href="cities/greater-noida.html">Greater Noida city page</a> · <a href="faq.html">FAQ for AI and humans</a></p>
 </div>
 """
     ncr_json = json.dumps({
@@ -517,8 +523,9 @@ Site: {ORIGIN}/
         "hi/index.html", "hi/delhi-noida.html",
     ] + [f"cities/{s}.html" for s, *_ in CITIES] + [
         "sell/old-gold-jewellery-noida.html", "sell/old-gold-jewellery-delhi.html",
-        "sell/old-gold-jewellery-mumbai.html", "sell/old-gold-jewellery-chennai.html",
-        "sell/old-gold-jewellery-bangalore.html", "sell/old-gold-jewellery-hyderabad.html",
+        "sell/old-gold-jewellery-gurgaon.html", "sell/old-gold-jewellery-greater-noida.html",
+        "sell/old-gold-jewellery-mumbai.html", "sell/old-gold-jewellery-bangalore.html",
+        "sell/old-gold-jewellery-chennai.html", "sell/old-gold-jewellery-hyderabad.html",
     ]
     sm = ['<?xml version="1.0" encoding="UTF-8"?>', '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">']
     for u in urls:
