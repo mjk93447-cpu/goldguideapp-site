@@ -11,6 +11,10 @@ on:
 permissions:
   contents: write
 
+concurrency:
+  group: rates
+  cancel-in-progress: false
+
 jobs:
   rates:
     runs-on: ubuntu-latest

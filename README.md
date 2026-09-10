@@ -8,4 +8,4 @@ Canonical source: [mjk93447-cpu/Goldmeet](https://github.com/mjk93447-cpu/Goldme
 
 Publish from that repo: `powershell -File scripts/publish-site.ps1`
 
-Daily IST gold rates: this repo’s `daily-gold-rates` workflow writes `rates.json` (`GOLDAPI_KEY` secret).
+Gold rates: `daily-gold-rates` writes IBJA 999/916/750 board rates into `rates.json` at 08:00 and 20:00 IST. GoldAPI spot is fallback only (plus 15% import duty). Source: Goldmeet `scripts/fetch-gold-rates.py`.

@@ -25,7 +25,6 @@ except Exception:  # pragma: no cover - Windows without tzdata
 OUT = Path(sys.argv[1] if len(sys.argv) > 1 else "rates.json")
 KEY = os.environ.get("GOLDAPI_KEY", "").strip()
 IBJA_URL = "https://ibjarates.com/"
-GOLDPRICE_URL = "https://api.goldprice.dev/v1/prices?symbol=XAU-INR-SPOT"
 CONTENTS_URL = "https://api.github.com/repos/mjk93447-cpu/goldguideapp-site/contents/rates.json?ref=main"
 RAW_URL = os.environ.get(
     "GOLD_RATE_SYNC_URL",
@@ -34,7 +33,6 @@ RAW_URL = os.environ.get(
 
 # Effective BCD + AIDC on bullion from 13 May 2026. IBJA prints rates without GST.
 INDIA_IMPORT_DUTY = 0.15
-TROY_OUNCE_GRAMS = 31.1034768
 
 IBJA_ROW = re.compile(
     r'data-label="(?P<session>AM|PM)"><strong>(?P<date>\d{2}/\d{2}/\d{4})</strong></td>\s*'
@@ -168,31 +166,32 @@ def from_goldapi_landed(key: str) -> dict:
     return india_board_from_spot(spot, _now_ist().isoformat())
 
 
-def from_goldprice_landed() -> dict:
-    """Free, keyless emergency fallback when IBJA and GoldAPI are unavailable."""
-    payload = fetch_json(GOLDPRICE_URL)
-    row = payload["symbols"][0]
-    price_per_oz = float(row["price"])
-    if price_per_oz <= 0 or row.get("is_stale"):
-        raise ValueError("GoldPrice.dev returned no fresh XAU/INR spot quote")
-    ist = _now_ist()
-    per_gram_24k = price_per_oz / TROY_OUNCE_GRAMS
-    spot = {
-        "timestamp": int(ist.timestamp()),
-        "metal": "XAU",
-        "currency": "INR",
-        "price_gram_24k": per_gram_24k,
-        "price_gram_22k": per_gram_24k * (22 / 24),
-        "price_gram_18k": per_gram_24k * (18 / 24),
-    }
-    data = india_board_from_spot(spot, ist.isoformat())
-    data["source"] = "goldprice_dev_xau_inr_plus_import_duty"
-    data["validation"] = {
-        "source": "goldprice_dev_xau_inr_spot",
-        "status": "fallback",
-        "computed_at": row.get("computed_at"),
-    }
-    return data
+FRESH_HOURS = 48
+
+
+def _public_feed_is_fresh(data: dict, now: datetime) -> bool:
+    """Public-feed fallback must be within 48h (as_of_ist); else refuse stale write."""
+    try:
+        as_of_raw = str(data.get("as_of_ist", "")).strip()[:10]
+        as_of = datetime.strptime(as_of_raw, "%Y-%m-%d").replace(tzinfo=timezone.utc)
+        # Compare date-only as_of against now (UTC); 48h window with 1-day grace for date truncation.
+        delta_h = (now.replace(tzinfo=timezone.utc) - as_of).total_seconds() / 3600
+        if delta_h < 0 or delta_h > (FRESH_HOURS + 24):
+            return False
+        fetched_raw = str(data.get("fetched_at_ist", "") or "")
+        if fetched_raw:
+            try:
+                fetched = datetime.fromisoformat(fetched_raw)
+                if fetched.tzinfo is None:
+                    fetched = fetched.replace(tzinfo=timezone.utc)
+                fdelta_h = (now.astimezone(timezone.utc) - fetched.astimezone(timezone.utc)).total_seconds() / 3600
+                if fdelta_h < -1 or fdelta_h > FRESH_HOURS:
+                    return False
+            except Exception:
+                pass
+        return True
+    except Exception:
+        return False
 
 
 def from_public_feed() -> dict:
@@ -223,19 +222,22 @@ def main() -> None:
             except Exception as goldapi_exc:
                 errors.append(f"goldapi: {goldapi_exc}")
         if data is None:
-            try:
-                data = from_goldprice_landed()
-            except Exception as goldprice_exc:
-                errors.append(f"goldprice.dev: {goldprice_exc}")
-        if data is None:
             data = from_public_feed()
             if str(data.get("source", "")).startswith("goldapi_inr") and not str(data.get("source")).endswith(
                 "import_duty"
             ):
                 data = india_board_from_spot(data, _now_ist().isoformat())
+            if not _public_feed_is_fresh(data, datetime.now(timezone.utc)):
+                print(
+                    f"stale public feed (as_of={data.get('as_of_ist')} fetched={data.get('fetched_at_ist')}); refusing write",
+                    file=sys.stderr,
+                )
+                sys.exit(2)
 
     OUT.parent.mkdir(parents=True, exist_ok=True)
-    OUT.write_text(json.dumps(data, indent=2) + "\n", encoding="utf-8")
+    tmp = OUT.with_suffix(OUT.suffix + ".tmp")
+    tmp.write_text(json.dumps(data, indent=2) + "\n", encoding="utf-8")
+    os.replace(tmp, OUT)
     print("wrote", OUT, data.get("price_gram_22k"), data.get("as_of_ist"), data.get("source"))
     if errors:
         print("fallbacks:", "; ".join(errors))

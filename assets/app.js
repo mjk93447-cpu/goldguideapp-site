@@ -25,7 +25,7 @@ function renderRates(data, citySel, out) {
   const g22 = Number(data.price_gram_22k);
   const g18 = Number(data.price_gram_18k);
   out.innerHTML = `
-    <p class="muted">${city} · as of ${data.as_of_ist || data.as_of || ""} IST · metal only, no making charges</p>
+    <p class="muted">${city} · as of ${data.as_of_ist || data.as_of || ""} IST · IBJA metal only, no GST or making charges</p>
     <p>24K / 10 g: <span class="price">${inr(applySpread(g24, bps))}</span></p>
     <p>22K / 10 g: <span class="price">${inr(applySpread(g22, bps))}</span></p>
     <p>18K / 10 g: <span class="price">${inr(applySpread(g18, bps))}</span></p>

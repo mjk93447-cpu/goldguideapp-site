@@ -1,6 +1,6 @@
 window.GOLDMEET = {
   supabaseUrl: "",
   supabaseAnon: "",
-  collectUrl: "",
+  collectUrl: "https://app.goldguideapp.com/api/collect",
 };
 

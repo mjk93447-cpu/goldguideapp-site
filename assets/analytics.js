@@ -135,15 +135,14 @@
   }
 
   function bind() {
-    document.querySelectorAll("[data-track=cta]").forEach(function (el) {
-      el.addEventListener("click", function () {
-        track("cta_click");
-      });
+    // Delegate on document so dynamically added CTAs are also measured.
+    document.addEventListener("click", function (ev) {
+      var el = ev.target && ev.target.closest ? ev.target.closest("[data-track=cta]") : null;
+      if (el) track("cta_click");
     });
-    document.querySelectorAll("form[data-track=join]").forEach(function (form) {
-      form.addEventListener("submit", function () {
-        track("join_submit");
-      });
+    document.addEventListener("submit", function (ev) {
+      var form = ev.target && ev.target.closest ? ev.target.closest("form[data-track=join]") : null;
+      if (form) track("join_submit");
     });
   }
 

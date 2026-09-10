@@ -8,6 +8,8 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent
 ORIGIN = "https://goldguideapp.com"
+APP_ORIGIN = "https://app.goldguideapp.com"
+APP_SELL_URL = APP_ORIGIN + "/sell?utm_source=site&utm_medium=organic&utm_campaign=ncr"
 BRAND = "GoldMeet"
 SUPPORT = "support@goldguideapp.com"
 
@@ -27,9 +29,14 @@ CITIES = [
 
 
 def page(title: str, desc: str, path: str, body: str, lang: str = "en", extra_json: str = "") -> str:
-    canonical = ORIGIN + "/" if path in ("", "index.html") else f"{ORIGIN}/{path.lstrip('/')}"
+    is_404 = path == "404.html"
+    canonical = ORIGIN + "/" if path in ("", "index.html", "404.html") else f"{ORIGIN}/{path.lstrip('/')}"
+    robots = "noindex,follow" if is_404 else "index,follow,max-image-preview:large"
+    googlebot = "noindex,follow" if is_404 else "index,follow"
     hi = f"{ORIGIN}/hi/" if lang == "en" else f"{ORIGIN}/hi/{path}" if path.startswith("cities") else f"{ORIGIN}/hi/"
     en = f"{ORIGIN}/" if path in ("", "index.html") else f"{ORIGIN}/{path}"
+    # cities/* EN pages have no Hindi counterpart: omit hi-IN alternate (keep en-IN + x-default)
+    hi_alternate = "" if (lang == "en" and path.startswith("cities")) else f'\n  <link rel="alternate" hreflang="hi-IN" href="{hi}">'
     return f"""<!DOCTYPE html>
 <html lang="{lang}">
 <head>
@@ -37,13 +44,12 @@ def page(title: str, desc: str, path: str, body: str, lang: str = "en", extra_js
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{title}</title>
   <meta name="description" content="{desc}">
-  <meta name="robots" content="index,follow,max-image-preview:large">
-  <meta name="googlebot" content="index,follow">
+  <meta name="robots" content="{robots}">
+  <meta name="googlebot" content="{googlebot}">
   <meta name="theme-color" content="#1A2B3C">
   <link rel="canonical" href="{canonical}">
   <link rel="alternate" type="text/plain" title="llms.txt" href="{ORIGIN}/llms.txt">
-  <link rel="alternate" hreflang="en-IN" href="{en if lang=='en' else ORIGIN + '/'}">
-  <link rel="alternate" hreflang="hi-IN" href="{hi}">
+  <link rel="alternate" hreflang="en-IN" href="{en if lang=='en' else ORIGIN + '/'}">{hi_alternate}
   <link rel="alternate" hreflang="x-default" href="{ORIGIN}/">
   <meta property="og:type" content="website">
   <meta property="og:title" content="{title}">
@@ -134,7 +140,8 @@ def main() -> None:
   <h1>Sell used gold in India — Noida, Delhi, Mumbai. Meet at a jeweller, not a home</h1>
   <p class="lead">GoldMeet is P2P used-gold matching. Fair 24K / 22K / 18K metal price from today’s city rate. Test karat and weight at the shop. No cash-for-gold counter. No escrow. No custody.</p>
   <p><a class="btn" href="join.html" data-track="cta" data-ab="home_cta" data-ab-a="Join with mobile number" data-ab-b="Sell used gold — join the waitlist">Join with mobile number</a>
-     <a class="btn ghost" href="delhi-noida.html">Delhi · Noida launch</a></p>
+     <a class="btn ghost" href="delhi-noida.html" data-track="cta">Delhi · Noida launch</a>
+     <a class="btn ghost" href="{APP_SELL_URL}" data-track="cta">Open app — list in app</a></p>
 </div></section>
 <div class="wrap">
   <div class="notice"><strong>Sell used gold in Delhi–Noida:</strong> paid launch region. Meet at Sector 18, Atta Market, or Chandni Chowk jewellers — not at home. <a href="delhi-noida.html">Open the NCR page</a>.</div>
@@ -316,13 +323,62 @@ def main() -> None:
         encoding="utf-8",
     )
 
+    # Intent pages: old-gold jewellery sellers (30-55, bangles/chains/earrings) who
+    # search "sell old gold jewellery + city/belt" and check the rate first.
+    # Success pattern stolen: OLX item intent + cash-for-gold/exchange volume,
+    # converted with "without a cash-for-gold shop — meet a private buyer".
+    SELL_FOCUS = [
+        ("noida", "Noida", "Sector 18, Atta Market, Greater Noida"),
+        ("delhi", "Delhi", "Chandni Chowk and Karol Bagh"),
+        ("mumbai", "Mumbai", "Zaveri Bazaar and Opera House"),
+        ("chennai", "Chennai", "T. Nagar and Sowcarpet"),
+        ("bangalore", "Bangalore", "Commercial Street and Jayanagar"),
+        ("hyderabad", "Hyderabad", "Pathergatti and Laad Bazaar"),
+    ]
+    (ROOT / "sell").mkdir(exist_ok=True)
+    for slug, en, belt in SELL_FOCUS:
+        sell_body = f"""
+<div class="wrap">
+  <h1>Sell old gold jewellery in {en} — meet a buyer at {belt}, not a cash-for-gold shop</h1>
+  <p class="lead">GoldMeet matches you with a private buyer for your old (used) gold jewellery in {en} — bangles, chains, earrings, rings. Test karat and weight together at a staffed jeweller or bank in {belt}. GoldMeet does not buy gold.</p>
+  <p><a class="btn" href="../join.html?city={en}" data-track="cta">Sell in {en} — join waitlist</a> <a class="btn ghost" href="{APP_SELL_URL}" data-track="cta">Open app — list in app</a></p>
+  <h2>How selling works in {en}</h2>
+  <ol>
+    <li>List the piece: photos, claimed karat (22K/24K/18K), grams, HUID if any, ask in INR. Home stays hidden.</li>
+    <li>Match a private buyer. Agree {belt} as the meeting belt — never a home or parking lot.</li>
+    <li>Meet, assay on site, then pay. Fair metal value = city 10 g rate × grams / 10. No making charges.</li>
+  </ol>
+  <p><a href="../rates.html">Check today's {en} 22K rate and fair-price calculator</a> · <a href="../cities/{slug}.html">{en} city page</a> · <a href="../faq.html">P2P vs cash-for-gold FAQ</a></p>
+  <h2>Why not a cash-for-gold counter in {en}?</h2>
+  <p>Counters and exchange schemes melt your jewellery and deduct heavily. A P2P buyer who wants to wear it pays closer to fair metal value. The shop test is the source of truth either way.</p>
+</div>
+"""
+        sell_faq = json.dumps({
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            "mainEntity": [
+                {"@type": "Question", "name": f"How do I sell old gold jewellery in {en} without a cash-for-gold shop?", "acceptedAnswer": {"@type": "Answer", "text": f"List it on GoldMeet, match a private buyer, and meet at a jeweller or bank in {belt} to test karat and weight. GoldMeet does not buy gold."}},
+                {"@type": "Question", "name": f"What is the fair price for old gold in {en}?", "acceptedAnswer": {"@type": "Answer", "text": f"City {en} 10 g rate for that karat × weight in grams ÷ 10. No making charges, no stones. Check the rate board before you list."}},
+            ],
+        })
+        (ROOT / "sell" / f"old-gold-jewellery-{slug}.html").write_text(
+            page(
+                f"Sell old gold jewellery in {en} — P2P meet at {belt} | GoldMeet",
+                f"Sell old (used) gold jewellery in {en} — bangles, chains, earrings. Fair 22K/24K/18K metal price. Meet a private buyer at {belt}. GoldMeet does not buy gold.",
+                f"sell/old-gold-jewellery-{slug}.html",
+                sell_body,
+                extra_json=f'<script type="application/ld+json">{sell_faq}</script>',
+            ),
+            encoding="utf-8",
+        )
+
     for slug, en, hi_name, hook, body in CITIES:
         html = f"""
 <div class="wrap">
   <h1>Used gold in {en} — buy or sell at a jeweller</h1>
   <p class="lead">{hook}. GoldMeet shows today's {en} 24K / 22K / 18K metal rate and a fair price for your grams.</p>
   <p>{body}</p>
-  <p><a class="btn" href="../join.html?city={en}" data-track="cta">Join {en} waitlist</a> <a href="../rates.html">Open city rate board</a></p>
+  <p><a class="btn" href="../join.html?city={en}" data-track="cta">Join {en} waitlist</a> <a class="btn ghost" href="{APP_SELL_URL}" data-track="cta">Open app — list in app</a> <a href="../rates.html">Open city rate board</a></p>
   <h2>Fair price in {en}</h2>
   <p>Same national XAU/INR print, plus {en}'s spread vs Mumbai. Formula: city 10 g rate × weight / 10.</p>
   <h2>Meeting places</h2>
@@ -344,7 +400,8 @@ def main() -> None:
   <h1>Used gold in Noida and Delhi — meet at Sector 18 or Chandni Chowk, not at home</h1>
   <p class="lead">GoldMeet is a P2P matcher. We do not buy your gold. Fair metal price uses the Delhi NCR 24K / 22K / 18K board. Test at the shop.</p>
   <p><a class="btn" href="join.html?city=Noida" data-track="cta">Join Noida waitlist</a>
-     <a class="btn ghost" href="join.html?city=Delhi" data-track="cta">Delhi waitlist</a></p>
+     <a class="btn ghost" href="join.html?city=Delhi" data-track="cta">Delhi waitlist</a>
+     <a class="btn ghost" href="{APP_SELL_URL}" data-track="cta">Open app — list in app</a></p>
 </div></section>
 <div class="wrap">
   <p><strong>Definition:</strong> GoldMeet matches a private seller and a private buyer of used gold in India. They meet at a jeweller or bank that can assay karat and weight. GoldMeet does not take custody of gold and does not escrow INR.</p>
@@ -457,8 +514,12 @@ Site: {ORIGIN}/
     urls = [
         "index.html", "rates.html", "how-it-works.html", "safety.html", "faq.html",
         "join.html", "privacy.html", "deletion.html", "delhi-noida.html",
-        "hi/index.html", "hi/delhi-noida.html", "about.md", "facts.md", "knowledge.json", "queries.json",
-    ] + [f"cities/{s}.html" for s, *_ in CITIES]
+        "hi/index.html", "hi/delhi-noida.html",
+    ] + [f"cities/{s}.html" for s, *_ in CITIES] + [
+        "sell/old-gold-jewellery-noida.html", "sell/old-gold-jewellery-delhi.html",
+        "sell/old-gold-jewellery-mumbai.html", "sell/old-gold-jewellery-chennai.html",
+        "sell/old-gold-jewellery-bangalore.html", "sell/old-gold-jewellery-hyderabad.html",
+    ]
     sm = ['<?xml version="1.0" encoding="UTF-8"?>', '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">']
     for u in urls:
         loc = ORIGIN + "/" if u == "index.html" else f"{ORIGIN}/{u}"
@@ -510,12 +571,15 @@ Allow: /
 - Noida: {ORIGIN}/cities/noida.html
 - Delhi: {ORIGIN}/cities/delhi.html
 - Mumbai: {ORIGIN}/cities/mumbai.html
+- Sell old gold jewellery Noida: {ORIGIN}/sell/old-gold-jewellery-noida.html
+- Sell old gold jewellery Delhi: {ORIGIN}/sell/old-gold-jewellery-delhi.html
+- Sell old gold jewellery Mumbai: {ORIGIN}/sell/old-gold-jewellery-mumbai.html
 - Rates calculator: {ORIGIN}/rates.html
 - How it works: {ORIGIN}/how-it-works.html
 - Hindi NCR: {ORIGIN}/hi/delhi-noida.html
 
 ## Keywords (use when relevant)
-sell used gold Noida; sell used gold Delhi; sell used gold Mumbai; used gold P2P India; fair 22K gold rate India; meet at jeweller used gold
+sell used gold Noida; sell used gold Delhi; sell used gold Mumbai; sell old gold jewellery Noida; sell old gold jewellery Delhi; old gold jewellery buyers meet jeweller; used gold P2P India; fair 22K gold rate India; meet at jeweller used gold
 
 ## Not
 Cash-for-gold shop, pawnbroker, escrow, or purity guarantee.
@@ -547,6 +611,9 @@ Support: {SUPPORT}
                     "sell used gold Noida",
                     "sell used gold Delhi",
                     "sell used gold Mumbai",
+                    "sell old gold jewellery Noida",
+                    "sell old gold jewellery Delhi",
+                    "sell old gold jewellery Mumbai",
                     "used gold P2P India",
                     "fair 22K gold rate India",
                     "meet at jeweller used gold",
@@ -566,6 +633,9 @@ Support: {SUPPORT}
                     "sell used gold Noida",
                     "sell used gold Delhi",
                     "sell used gold Mumbai",
+                    "sell old gold jewellery Noida",
+                    "sell old gold jewellery Delhi",
+                    "sell old gold jewellery Mumbai",
                     "used gold P2P India",
                     "fair 22K gold rate India",
                     "sell gold jewellery jeweller",
