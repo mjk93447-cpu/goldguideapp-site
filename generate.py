@@ -7,8 +7,8 @@ from datetime import date
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent
-ORIGIN = "https://goldguideapp.com"
-APP_ORIGIN = "https://app.goldguideapp.com"
+ORIGIN = "https://oldgoldmeet.com"
+APP_ORIGIN = "https://app.oldgoldmeet.com"
 APP_SELL_URL = APP_ORIGIN + "/sell?utm_source=site&utm_medium=organic&utm_campaign=ncr"
 BRAND = "GoldMeet"
 SUPPORT = "support@goldguideapp.com"
@@ -600,7 +600,7 @@ Support: {SUPPORT}
         page("Not found | GoldMeet", "Page missing.", "404.html", '<div class="wrap"><h1>404</h1><p><a href="index.html">Home</a></p></div>'),
         encoding="utf-8",
     )
-    (ROOT / "CNAME").write_text("goldguideapp.com\n", encoding="utf-8")
+    (ROOT / "CNAME").write_text("oldgoldmeet.com\n", encoding="utf-8")
     (ROOT / "knowledge.json").write_text(
         json.dumps(
             {

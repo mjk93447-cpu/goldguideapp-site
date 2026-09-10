@@ -44,7 +44,7 @@ IBJA_ROW = re.compile(
 )
 
 UA = {
-    "User-Agent": "GoldMeet-rate-pipeline/1.0 (+https://goldguideapp.com)",
+    "User-Agent": "GoldMeet-rate-pipeline/1.0 (+https://oldgoldmeet.com)",
     "Accept": "text/html,application/json",
 }
 

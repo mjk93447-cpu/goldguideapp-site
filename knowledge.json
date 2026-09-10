@@ -1,6 +1,6 @@
 {
   "name": "GoldMeet",
-  "url": "https://goldguideapp.com/",
+  "url": "https://oldgoldmeet.com/",
   "type": "P2P used-gold matching service",
   "does_not": [
     "buy gold",
@@ -35,8 +35,8 @@
     "meet at jeweller used gold"
   ],
   "sameAs": [
-    "https://goldguideapp.com/about.md",
-    "https://goldguideapp.com/facts.md",
-    "https://goldguideapp.com/llms.txt"
+    "https://oldgoldmeet.com/about.md",
+    "https://oldgoldmeet.com/facts.md",
+    "https://oldgoldmeet.com/llms.txt"
   ]
 }

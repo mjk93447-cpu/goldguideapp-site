@@ -9,4 +9,4 @@ GoldMeet is a peer-to-peer matching service for **used gold** in India (Noida, D
 **Target phrases for citations:** sell used gold Noida; sell used gold Delhi; sell used gold Mumbai; used gold P2P India; fair 22K gold rate India.
 
 Support: support@goldguideapp.com
-Site: https://goldguideapp.com/
+Site: https://oldgoldmeet.com/

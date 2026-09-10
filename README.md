@@ -1,6 +1,6 @@
 # GoldMeet public website (GitHub Pages)
 
-Live site: **https://goldguideapp.com**
+Live site: **https://oldgoldmeet.com**
 
 This public repository exists only so GitHub Pages can serve the apex domain. **Do not develop here.**
 

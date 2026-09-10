@@ -1,6 +1,6 @@
 User-agent: *
 Allow: /
-Sitemap: https://goldguideapp.com/sitemap.xml
+Sitemap: https://oldgoldmeet.com/sitemap.xml
 
 User-agent: Googlebot
 Allow: /
