@@ -12,6 +12,8 @@ APP_ORIGIN = "https://app.oldgoldmeet.com"
 APP_SELL_URL = APP_ORIGIN + "/sell?utm_source=site&utm_medium=organic&utm_campaign=ncr"
 BRAND = "GoldMeet"
 SUPPORT = "support@goldguideapp.com"
+# IndexNow key (Bing/Yandex instant submit). File <KEY>.txt must contain the key.
+INDEXNOW_KEY = "4a1d7b94491d895c93bd8d14eeb6d942"
 
 CITIES = [
     ("noida", "Noida", "नोएडा", "Sector 18, Atta Market, Greater Noida", "Meet at a staffed jeweller or bank in Sector 18, Atta Market, or Greater Noida. Noida uses the Delhi NCR metal board. Never meet at a flat or parking lot."),
@@ -49,6 +51,7 @@ def page(title: str, desc: str, path: str, body: str, lang: str = "en", extra_js
   <meta name="robots" content="{robots}">
   <meta name="googlebot" content="{googlebot}">
   <meta name="theme-color" content="#1A2B3C">
+  <link rel="icon" type="image/svg+xml" href="{'../' if '/' in path else ''}assets/icon.svg">
   <link rel="canonical" href="{canonical}">
   <link rel="alternate" type="text/plain" title="llms.txt" href="{ORIGIN}/llms.txt">
   <link rel="alternate" hreflang="en-IN" href="{en if lang=='en' else ORIGIN + '/'}">{hi_alternate}
@@ -601,6 +604,7 @@ Support: {SUPPORT}
         encoding="utf-8",
     )
     (ROOT / "CNAME").write_text("oldgoldmeet.com\n", encoding="utf-8")
+    (ROOT / f"{INDEXNOW_KEY}.txt").write_text(INDEXNOW_KEY + "\n", encoding="utf-8")
     (ROOT / "knowledge.json").write_text(
         json.dumps(
             {
