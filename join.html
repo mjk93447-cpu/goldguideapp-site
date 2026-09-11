@@ -41,37 +41,34 @@
 </header>
 
 <div class="wrap">
-  <h1>Join GoldMeet with your Indian mobile</h1>
-  <p class="lead">Phone OTP when Supabase is linked. Waitlist email works now — Delhi and Noida are the paid-launch queue.</p>
+  <h1>Join GoldMeet with your Indian mobile number</h1>
+  <p class="lead">No password, no email needed. Sign in with an OTP in the app — it takes two minutes. Noida and Delhi NCR queues open first.</p>
   <div class="card">
-    <h2>OTP (live backend)</h2>
-    <form id="otp-form">
-      <label>Mobile</label>
-      <input name="phone" required placeholder="9876543210" inputmode="numeric">
-      <label>OTP (after send)</label>
-      <input name="code" placeholder="6 digits" inputmode="numeric" maxlength="6">
-      <p><button class="btn" type="submit">Send / verify OTP</button></p>
-      <p id="otp-status" class="muted">If send fails, use the waitlist form.</p>
-    </form>
+    <h2>Fastest: continue in the app</h2>
+    <p>Get the OTP on your mobile, list your piece or browse buyers right away.</p>
+    <p><a class="btn" href="https://app.oldgoldmeet.com/login?utm_source=site&utm_medium=organic&utm_campaign=join" data-track="cta">Continue with mobile number</a></p>
+    <p class="muted">Works on any phone browser. You can add it to your home screen later.</p>
   </div>
   <div class="card" style="margin-top:1rem">
-    <h2>Waitlist (works now)</h2>
-    <form action="https://formsubmit.co/support@oldgoldmeet.com" method="POST" data-track="join">
+    <h2>Not ready yet? Join the waitlist</h2>
+    <p class="muted">Leave your mobile. We SMS you when your city queue opens. No spam, no calls.</p>
+    <form action="https://formsubmit.co/94013d152afbb270b6f0e5e2a251e36d" method="POST" data-track="join">
       <input type="hidden" name="_subject" value="GoldMeet waitlist">
       <input type="hidden" name="_captcha" value="false">
       <input type="hidden" name="_template" value="table">
+      <input type="hidden" name="_next" value="https://oldgoldmeet.com/join.html?ok=1">
       <input type="hidden" name="utm_source">
       <input type="hidden" name="utm_medium">
       <input type="hidden" name="utm_campaign">
       <label>Name</label>
-      <input name="name" required>
-      <label>Indian mobile</label>
-      <input name="phone" required placeholder="9876543210">
+      <input name="name" required autocomplete="name">
+      <label>Indian mobile (10 digits)</label>
+      <input name="phone" required placeholder="9876543210" inputmode="numeric" pattern="[6-9][0-9]{9}" title="10-digit Indian mobile starting 6-9" maxlength="10">
       <label>City</label>
       <select name="city"><option>Noida</option><option>Delhi</option><option>Gurgaon</option><option>Greater Noida</option><option>Mumbai</option><option>Bangalore</option><option>Chennai</option><option>Kolkata</option><option>Hyderabad</option><option>Ahmedabad</option><option>Pune</option><option>Jaipur</option><option>Surat</option></select>
       <label>I want to</label>
-      <select name="role"><option>Sell used gold</option><option>Buy used gold</option><option>Both</option></select>
-      <p><button class="btn" type="submit">Join waitlist</button></p>
+      <select name="role"><option>Sell old gold jewellery</option><option>Buy old gold jewellery</option><option>Both</option></select>
+      <p><button class="btn" type="submit">Notify me</button></p>
     </form>
   </div>
 </div>
