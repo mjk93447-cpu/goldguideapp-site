@@ -11,7 +11,7 @@ ORIGIN = "https://oldgoldmeet.com"
 APP_ORIGIN = "https://app.oldgoldmeet.com"
 APP_SELL_URL = APP_ORIGIN + "/sell?utm_source=site&utm_medium=organic&utm_campaign=ncr"
 BRAND = "GoldMeet"
-SUPPORT = "support@goldguideapp.com"
+SUPPORT = "support@oldgoldmeet.com"
 # IndexNow key (Bing/Yandex instant submit). File <KEY>.txt must contain the key.
 INDEXNOW_KEY = "4a1d7b94491d895c93bd8d14eeb6d942"
 
@@ -277,7 +277,7 @@ def main() -> None:
   </div>
   <div class="card" style="margin-top:1rem">
     <h2>Waitlist (works now)</h2>
-    <form action="https://formsubmit.co/support@goldguideapp.com" method="POST" data-track="join">
+    <form action="https://formsubmit.co/support@oldgoldmeet.com" method="POST" data-track="join">
       <input type="hidden" name="_subject" value="GoldMeet waitlist">
       <input type="hidden" name="_captcha" value="false">
       <input type="hidden" name="_template" value="table">
