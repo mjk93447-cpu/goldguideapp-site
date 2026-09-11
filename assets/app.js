@@ -129,6 +129,35 @@ function bootAuth() {
   });
 }
 
+function bootWaitlist() {
+  const form = document.querySelector("#waitlist-form");
+  if (!form) return;
+  const status = document.querySelector("#waitlist-status");
+  form.addEventListener("submit", async (ev) => {
+    ev.preventDefault();
+    status.textContent = "Joining…";
+    try {
+      const phone = form.phone.value.replace(/\D/g, "").slice(-10);
+      const res = await fetch("https://app.oldgoldmeet.com/api/waitlist", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: form.name.value.trim(),
+          phone,
+          city: form.city.value,
+          role: form.role.value,
+        }),
+      });
+      const body = await res.json();
+      if (!res.ok || !body.ok) throw new Error("Could not join. Check the mobile number.");
+      status.innerHTML = `<span class="ok">Done. We SMS you when ${form.city.value} opens.</span>`;
+      form.reset();
+    } catch (e) {
+      status.innerHTML = `<span class="err">${e.message}</span>`;
+    }
+  });
+}
+
 document.addEventListener("DOMContentLoaded", () => {
   const city = new URLSearchParams(location.search).get("city");
   const q = new URLSearchParams(location.search);
@@ -145,4 +174,5 @@ document.addEventListener("DOMContentLoaded", () => {
   }
   bootRates();
   bootAuth();
+  bootWaitlist();
 });

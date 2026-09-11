@@ -52,16 +52,9 @@
   <div class="card" style="margin-top:1rem">
     <h2>Not ready yet? Join the waitlist</h2>
     <p class="muted">Leave your mobile. We SMS you when your city queue opens. No spam, no calls.</p>
-    <form action="https://formsubmit.co/94013d152afbb270b6f0e5e2a251e36d" method="POST" data-track="join">
-      <input type="hidden" name="_subject" value="GoldMeet waitlist">
-      <input type="hidden" name="_captcha" value="false">
-      <input type="hidden" name="_template" value="table">
-      <input type="hidden" name="_next" value="https://oldgoldmeet.com/join.html?ok=1">
-      <input type="hidden" name="utm_source">
-      <input type="hidden" name="utm_medium">
-      <input type="hidden" name="utm_campaign">
+    <form id="waitlist-form" data-track="join">
       <label>Name</label>
-      <input name="name" required autocomplete="name">
+      <input name="name" required autocomplete="name" maxlength="60">
       <label>Indian mobile (10 digits)</label>
       <input name="phone" required placeholder="9876543210" inputmode="numeric" pattern="[6-9][0-9]{9}" title="10-digit Indian mobile starting 6-9" maxlength="10">
       <label>City</label>
@@ -69,6 +62,7 @@
       <label>I want to</label>
       <select name="role"><option>Sell old gold jewellery</option><option>Buy old gold jewellery</option><option>Both</option></select>
       <p><button class="btn" type="submit">Notify me</button></p>
+      <p id="waitlist-status" class="muted"></p>
     </form>
   </div>
 </div>
